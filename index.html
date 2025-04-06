@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TI-Nspire Simulator</title>
+  <style>
+    body {
+      margin: 0;
+      background: #222;
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .nspire {
+      background: #1a1a1a;
+      width: 400px;
+      height: 900px;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 20px #000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .screen {
+      background: #333;
+      height: 200px;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 16px;
+      overflow-y: auto;
+      color: white;
+      font-family: monospace;
+      position: relative;
+    }
+
+    .nav-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .navpad {
+      display: grid;
+      grid-template-columns: 40px 40px 40px;
+      grid-template-rows: 40px 40px 40px;
+      gap: 5px;
+    }
+
+    .navpad button {
+      background: #555;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .controls button {
+      background: #444;
+      border: none;
+      border-radius: 5px;
+      padding: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .functions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-left: 10px;
+    }
+
+    .functions button {
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .keyboard {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .keyboard button {
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .qwerty {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+    }
+
+    .qwerty button {
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .qwerty .space {
+      grid-column: span 5;
+    }
+
+    /* Menu Section on the Screen */
+    .menu-options {
+      display: none;
+      background: #333;
+      padding: 10px;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .menu-options button {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 5px;
+      border: none;
+      background: #444;
+      color: white;
+      cursor: pointer;
+    }
+
+    .menu-active {
+      display: block;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="nspire">
+  <div class="screen" id="screen">
+    TI-Nspire Emulator
+    <!-- Menu Options Display on the Screen -->
+    <div id="menuOptions" class="menu-options">
+      <button>Functions</button>
+      <button>Inequality</button>
+      <button>Ratio</button>
+      <button>Statistics</button>
+      <button>Vectors</button>
+      <button>Graphing</button>
+      <button>Cheatsheets</button>
+      <button>Calculate</button>
+      <button>Base N</button>
+      <button>Matrix</button>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="navpad">
+      <button></button>
+      <button>↑</button>
+      <button></button>
+      <button>←</button>
+      <button>●</button>
+      <button>→</button>
+      <button></button>
+      <button>↓</button>
+      <button></button>
+    </div>
+
+    <div class="functions">
+      <button>frac</button>
+      <button>√</button>
+      <button>sin</button>
+      <button>cos</button>
+      <button>tan</button>
+      <button>cot</button>
+      <button>ln</button>
+      <button>lim</button>
+      <button>Σ</button>
+      <button>π</button>
+      <button>e</button>
+      <button>∞</button>
+      <button>x²</button> <!-- x^2 Button -->
+      <button>x^y</button> <!-- x^y Button -->
+      <button>%</button> <!-- Percentage Button -->
+      <button>∫</button> <!-- Integral Button -->
+      <button>x</button> <!-- x Variable Button -->
+      <button>y</button> <!-- y Variable Button -->
+    </div>
+
+    <div class="controls">
+      <button id="menuButton">menu</button>
+      <button>esc</button>
+      <button>shift</button>
+    </div>
+  </div>
+
+  <!-- Numeric keypad -->
+  <div class="keyboard">
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>+</button>
+    <button>del</button>
+
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button>-</button>
+    <button>tab</button>
+
+    <button>7</button>
+    <button>8</button>
+    <button>9</button>
+    <button>*</button>
+    <button>enter</button>
+
+    <button>0</button>
+    <button>.</button>
+    <button>(</button>
+    <button>)</button>
+    <button>/</button>
+  </div>
+
+  <!-- QWERTY Keyboard -->
+  <div class="qwerty">
+    <button>Q</button>
+    <button>W</button>
+    <button>E</button>
+    <button>R</button>
+    <button>T</button>
+    <button>Y</button>
+    <button>U</button>
+    <button>I</button>
+    <button>O</button>
+    <button>P</button>
+
+    <button>A</button>
+    <button>S</button>
+    <button>D</button>
+    <button>F</button>
+    <button>G</button>
+    <button>H</button>
+    <button>J</button>
+    <button>K</button>
+    <button>L</button>
+    <button>;</button>
+
+    <button>Z</button>
+    <button>X</button>
+    <button>C</button>
+    <button>V</button>
+    <button>B</button>
+    <button>N</button>
+    <button>M</button>
+    <button>,</button>
+    <button>.</button>
+    <button>/</button>
+
+    <button class="space">SPACE</button>
+  </div>
+</div>
+
+<script>
+  // Get the menu button and menu options
+  const menuButton = document.getElementById('menuButton');
+  const menuOptions = document.getElementById('menuOptions');
+
+  // Toggle the visibility of the menu on the screen
+  menuButton.addEventListener('click', () => {
+    menuOptions.classList.toggle('menu-active');
+  });
+
+  // Close the menu when clicking outside of it
+  window.addEventListener('click', (e) => {
+    if (!menuButton.contains(e.target) && !menuOptions.contains(e.target)) {
+      menuOptions.classList.remove('menu-active');
+    }
+  });
+</script>
+
+</body>
+</html>
