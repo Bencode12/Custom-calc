@@ -1,9 +1,9 @@
 :root {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #111111;
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #141414;
   --bg-tertiary: #1a1a1a;
   --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-active: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(255, 255, 255, 0.07);
   --border-color: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(255, 255, 255, 0.04);
   --text-primary: #e5e5e5;
@@ -15,9 +15,7 @@
   --operator-bg: rgba(255, 255, 255, 0.03);
   --number-bg: rgba(255, 255, 255, 0.02);
   --function-bg: rgba(255, 255, 255, 0.015);
-  --equals-bg: #10b981;
   --danger: #ef4444;
-  --danger-hover: #dc2626;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -46,7 +44,7 @@ html, body {
 }
 
 ::selection {
-  background: var(--accent-subtle);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--text-primary);
 }
 
@@ -60,10 +58,10 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
 }
