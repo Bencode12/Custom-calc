@@ -14,14 +14,14 @@ const BUTTONS = [
   { label: 'asin', type: 'function', value: 'asin(' },
   { label: 'acos', type: 'function', value: 'acos(' },
   { label: 'atan', type: 'function', value: 'atan(' },
-  { label: 'π', type: 'number', value: 'π' },
+  { label: '\u03C0', type: 'number', value: '\u03C0' },
   { label: 'e', type: 'number', value: 'e' },
-  { label: '⌫', type: 'operator', value: 'backspace' },
+  { label: '\u232B', type: 'operator', value: 'backspace' },
   
   // Row 3 - Powers and roots
-  { label: 'x²', type: 'function', value: '^2' },
-  { label: 'xʸ', type: 'operator', value: '^' },
-  { label: '√', type: 'function', value: 'sqrt(' },
+  { label: 'x\u00B2', type: 'function', value: '^2' },
+  { label: 'x\u02B8', type: 'operator', value: '^' },
+  { label: '\u221A', type: 'function', value: 'sqrt(' },
   { label: '7', type: 'number', value: '7' },
   { label: '8', type: 'number', value: '8' },
   { label: '9', type: 'number', value: '9' },
@@ -37,7 +37,7 @@ const BUTTONS = [
   // Row 5 - Basic operators
   { label: '1/x', type: 'function', value: '1/' },
   { label: '|x|', type: 'function', value: 'abs(' },
-  { label: '÷', type: 'operator', value: '/' },
+  { label: '\u00F7', type: 'operator', value: '/' },
   { label: '1', type: 'number', value: '1' },
   { label: '2', type: 'number', value: '2' },
   { label: '3', type: 'number', value: '3' },
@@ -45,8 +45,8 @@ const BUTTONS = [
   // Row 6 - Final row
   { label: '0', type: 'number', value: '0', span: 2 },
   { label: '.', type: 'number', value: '.' },
-  { label: '×', type: 'operator', value: '*' },
-  { label: '-', type: 'operator', value: '-' },
+  { label: '\u00D7', type: 'operator', value: '*' },
+  { label: '\u2212', type: 'operator', value: '-' },
   { label: '+', type: 'operator', value: '+' },
   
   // Row 7 - Equals
@@ -56,12 +56,11 @@ const BUTTONS = [
 const Calculator = () => {
   const [expression, setExpression] = useState('')
   const [result, setResult] = useState('0')
-  const [history, setHistory] = useState([])
 
   const evaluateExpression = useCallback((expr) => {
     try {
       let evalExpr = expr
-        .replace(/π/g, 'Math.PI')
+        .replace(/\u03C0/g, 'Math.PI')
         .replace(/e/g, 'Math.E')
         .replace(/sin\(/g, 'Math.sin(')
         .replace(/cos\(/g, 'Math.cos(')
@@ -77,7 +76,7 @@ const Calculator = () => {
       
       const evalResult = Function('"use strict";return (' + evalExpr + ')')()
       return Number.isFinite(evalResult) ? evalResult : 'Error'
-    } catch (e) {
+    } catch {
       return 'Error'
     }
   }, [])
@@ -91,7 +90,6 @@ const Calculator = () => {
     } else if (value === 'equals') {
       const evalResult = evaluateExpression(expression)
       setResult(evalResult.toString())
-      setHistory(prev => [...prev, { expression, result: evalResult }])
       setExpression(evalResult.toString())
     } else {
       setExpression(prev => prev + value)
@@ -124,12 +122,17 @@ const Calculator = () => {
 
   return (
     <div className="calculator">
-      <div className="calculator-display">
-        <div className="expression">{expression || ' '}</div>
-        <div className="result">{result}</div>
+      <div className="calculator-mode">
+        <span className="mode-label">Mode</span>
+        <span className="mode-value">Scientific</span>
+      </div>
+
+      <div className="calculator-display" role="status" aria-live="polite">
+        <div className="expression" aria-label="Expression">{expression || '\u00A0'}</div>
+        <div className="result" aria-label="Result">{result}</div>
       </div>
       
-      <div className="calculator-keyboard">
+      <div className="calculator-keyboard" role="group" aria-label="Calculator buttons">
         {BUTTONS.map((btn, index) => (
           <button
             key={index}
