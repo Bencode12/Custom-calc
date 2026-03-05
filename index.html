@@ -3,311 +3,607 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TI-Nspire Simulator</title>
+  <title>Prism - Projects</title>
   <style>
-    body {
+    * {
       margin: 0;
-      background: #222;
-      font-family: sans-serif;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
     }
-
-    .nspire {
-      background: #1a1a1a;
-      width: 400px;
-      height: 900px;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 0 20px #000;
+    
+    :root {
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #242424;
+      --bg-hover: #2a2a2a;
+      --border-color: #333333;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1a1;
+      --text-muted: #666666;
+      --accent: #ffffff;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      color: var(--text-primary);
+    }
+    
+    .app-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-primary);
+      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      position: relative;
+      padding: 16px 0;
+      flex-shrink: 0;
     }
-
-    .screen {
-      background: #333;
-      height: 200px;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 16px;
-      overflow-y: auto;
-      color: white;
-      font-family: monospace;
-      position: relative;
-    }
-
-    .nav-section {
+    
+    .sidebar-header {
+      padding: 0 16px 24px;
       display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 8px;
+    }
+    
+    .nav-item {
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .nav-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+    
+    .nav-item.active {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .top-bar {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    
+    .page-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    
+    .search-container {
+      position: relative;
+      width: 320px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+    
+    .search-input:focus {
+      border-color: var(--text-muted);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+    
+    .icon-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .icon-button:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-primary);
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-secondary);
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .view-btn {
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .view-btn.active {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .project-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .project-card:hover {
+      background: var(--bg-hover);
+      border-color: var(--text-muted);
+    }
+    
+    .project-card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .project-preview {
+      aspect-ratio: 1;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: var(--text-muted);
+    }
+    
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .project-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .project-date {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .project-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .project-row:hover {
+      background: var(--bg-hover);
+    }
+    
+    .project-row .project-preview {
+      width: 40px;
+      height: 40px;
+      aspect-ratio: 1;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .project-row .project-info {
+      flex: 1;
+      flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
     }
-
-    .navpad {
-      display: grid;
-      grid-template-columns: 40px 40px 40px;
-      grid-template-rows: 40px 40px 40px;
-      gap: 5px;
+    
+    .project-row .project-date {
+      font-size: 12px;
     }
-
-    .navpad button {
-      background: #555;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .controls button {
-      background: #444;
-      border: none;
-      border-radius: 5px;
+    
+    .more-actions {
+      opacity: 0;
       padding: 8px;
-      color: white;
       cursor: pointer;
+      color: var(--text-secondary);
+      transition: opacity 0.2s;
     }
-
-    .functions {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-left: 10px;
+    
+    .project-row:hover .more-actions {
+      opacity: 1;
     }
-
-    .functions button {
+    
+    /* Dropdown Menu */
+    .dropdown {
+      position: relative;
+    }
+    
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       padding: 8px;
-      border: none;
-      border-radius: 5px;
-      background: #444;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .keyboard {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-    }
-
-    .keyboard button {
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      background: #444;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .qwerty {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 6px;
-    }
-
-    .qwerty button {
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      background: #444;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .qwerty .space {
-      grid-column: span 5;
-    }
-
-    /* Menu Section on the Screen */
-    .menu-options {
+      min-width: 200px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      z-index: 100;
       display: none;
-      background: #333;
-      padding: 10px;
-      font-size: 14px;
-      color: white;
-      text-align: center;
-      border-radius: 5px;
-      margin-top: 10px;
     }
-
-    .menu-options button {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 5px;
-      border: none;
-      background: #444;
-      color: white;
-      cursor: pointer;
-    }
-
-    .menu-active {
+    
+    .dropdown-menu.active {
       display: block;
     }
-
+    
+    .dropdown-item {
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-primary);
+      transition: background 0.2s;
+    }
+    
+    .dropdown-item:hover {
+      background: var(--bg-hover);
+    }
+    
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
   </style>
 </head>
 <body>
-
-<div class="nspire">
-  <div class="screen" id="screen">
-    TI-Nspire Emulator
-    <!-- Menu Options Display on the Screen -->
-    <div id="menuOptions" class="menu-options">
-      <button>Functions</button>
-      <button>Inequality</button>
-      <button>Ratio</button>
-      <button>Statistics</button>
-      <button>Vectors</button>
-      <button>Graphing</button>
-      <button>Cheatsheets</button>
-      <button>Calculate</button>
-      <button>Base N</button>
-      <button>Matrix</button>
-    </div>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">P</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-item" data-view="all">All Projects</div>
+        <div class="nav-item active" data-view="yours">Your Projects</div>
+        <div class="nav-item" data-view="shared">Shared with you</div>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-avatar">B</div>
+        <span>benjaminas.petronis@gmail.com</span>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <h1 class="page-title" id="pageTitle">Your Projects</h1>
+        
+        <div class="top-bar-actions">
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search">
+          </div>
+          
+          <div class="view-toggle">
+            <button class="view-btn active" id="listViewBtn" title="List view">☰</button>
+            <button class="view-btn" id="gridViewBtn" title="Grid view">▦</button>
+          </div>
+          
+          <button class="icon-button">⋮⋮</button>
+          
+          <div class="dropdown">
+            <button class="btn btn-secondary" id="importBtn">
+              Import ▾
+            </button>
+            <div class="dropdown-menu" id="importDropdown">
+              <div class="dropdown-item">Import archive (.zip, .tar.gz)</div>
+              <div class="dropdown-item">Import Folder</div>
+            </div>
+          </div>
+          
+          <button class="btn btn-primary">
+            <span>+</span> New
+          </button>
+        </div>
+      </div>
+      
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- List View -->
+        <div class="projects-list" id="listView">
+          <div class="project-row">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">New Project</span>
+              <span class="project-date">2d</span>
+              <span class="more-actions">⋯</span>
+            </div>
+          </div>
+          
+          <div class="project-row">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">On the Differential Geometry of Ideal Rocket Trajectories: A Foundational Manifold-Theoretic Framework for Optimal Propulsion in Vacuum</span>
+              <span class="project-date">9d</span>
+              <span class="more-actions">⋯</span>
+            </div>
+          </div>
+          
+          <div class="project-row">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">Determinant of the i + j Matrix</span>
+              <span class="project-date">13d</span>
+              <span class="more-actions">⋯</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Grid View (Hidden by default) -->
+        <div class="projects-grid" id="gridView" style="display: none;">
+          <div class="project-card project-card-grid">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">New Project</span>
+              <span class="project-date">2d</span>
+            </div>
+          </div>
+          
+          <div class="project-card project-card-grid">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">New Project</span>
+              <span class="project-date">8d</span>
+            </div>
+          </div>
+          
+          <div class="project-card project-card-grid">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">On the Differential Geometry of Ideal Rocket Trajectories: A Foundational Manifold-Theoretic Framework for Optimal Propulsion in Vacuum</span>
+              <span class="project-date">9d</span>
+            </div>
+          </div>
+          
+          <div class="project-card project-card-grid">
+            <div class="project-preview">📄</div>
+            <div class="project-info">
+              <span class="project-title">Determinant of the i + j Matrix</span>
+              <span class="project-date">13d</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <div class="nav-section">
-    <div class="navpad">
-      <button></button>
-      <button>↑</button>
-      <button></button>
-      <button>←</button>
-      <button>●</button>
-      <button>→</button>
-      <button></button>
-      <button>↓</button>
-      <button></button>
-    </div>
-
-    <div class="functions">
-      <button>frac</button>
-      <button>√</button>
-      <button>sin</button>
-      <button>cos</button>
-      <button>tan</button>
-      <button>cot</button>
-      <button>ln</button>
-      <button>lim</button>
-      <button>Σ</button>
-      <button>π</button>
-      <button>e</button>
-      <button>∞</button>
-      <button>x²</button> <!-- x^2 Button -->
-      <button>x^y</button> <!-- x^y Button -->
-      <button>%</button> <!-- Percentage Button -->
-      <button>∫</button> <!-- Integral Button -->
-      <button>x</button> <!-- x Variable Button -->
-      <button>y</button> <!-- y Variable Button -->
-    </div>
-
-    <div class="controls">
-      <button id="menuButton">menu</button>
-      <button>esc</button>
-      <button>shift</button>
-    </div>
-  </div>
-
-  <!-- Numeric keypad -->
-  <div class="keyboard">
-    <button>1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>+</button>
-    <button>del</button>
-
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>-</button>
-    <button>tab</button>
-
-    <button>7</button>
-    <button>8</button>
-    <button>9</button>
-    <button>*</button>
-    <button>enter</button>
-
-    <button>0</button>
-    <button>.</button>
-    <button>(</button>
-    <button>)</button>
-    <button>/</button>
-  </div>
-
-  <!-- QWERTY Keyboard -->
-  <div class="qwerty">
-    <button>Q</button>
-    <button>W</button>
-    <button>E</button>
-    <button>R</button>
-    <button>T</button>
-    <button>Y</button>
-    <button>U</button>
-    <button>I</button>
-    <button>O</button>
-    <button>P</button>
-
-    <button>A</button>
-    <button>S</button>
-    <button>D</button>
-    <button>F</button>
-    <button>G</button>
-    <button>H</button>
-    <button>J</button>
-    <button>K</button>
-    <button>L</button>
-    <button>;</button>
-
-    <button>Z</button>
-    <button>X</button>
-    <button>C</button>
-    <button>V</button>
-    <button>B</button>
-    <button>N</button>
-    <button>M</button>
-    <button>,</button>
-    <button>.</button>
-    <button>/</button>
-
-    <button class="space">SPACE</button>
-  </div>
-</div>
-
-<script>
-  // Get the menu button and menu options
-  const menuButton = document.getElementById('menuButton');
-  const menuOptions = document.getElementById('menuOptions');
-
-  // Toggle the visibility of the menu on the screen
-  menuButton.addEventListener('click', () => {
-    menuOptions.classList.toggle('menu-active');
-  });
-
-  // Close the menu when clicking outside of it
-  window.addEventListener('click', (e) => {
-    if (!menuButton.contains(e.target) && !menuOptions.contains(e.target)) {
-      menuOptions.classList.remove('menu-active');
-    }
-  });
-</script>
-
+  <script>
+    // Navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        
+        const view = item.dataset.view;
+        pageTitle.textContent = view === 'all' ? 'All Projects' : 
+                               view === 'yours' ? 'Your Projects' : 'Shared with you';
+      });
+    });
+    
+    // View Toggle
+    const listViewBtn = document.getElementById('listViewBtn');
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listView = document.getElementById('listView');
+    const gridView = document.getElementById('gridView');
+    
+    listViewBtn.addEventListener('click', () => {
+      listViewBtn.classList.add('active');
+      gridViewBtn.classList.remove('active');
+      listView.style.display = 'flex';
+      gridView.style.display = 'none';
+    });
+    
+    gridViewBtn.addEventListener('click', () => {
+      gridViewBtn.classList.add('active');
+      listViewBtn.classList.remove('active');
+      gridView.style.display = 'grid';
+      listView.style.display = 'none';
+    });
+    
+    // Import Dropdown
+    const importBtn = document.getElementById('importBtn');
+    const importDropdown = document.getElementById('importDropdown');
+    
+    importBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      importDropdown.classList.toggle('active');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!importBtn.contains(e.target)) {
+        importDropdown.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>
